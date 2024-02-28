@@ -16,3 +16,21 @@ func NewCommander(bot *tgbotapi.BotAPI, psrvc product.Service) *Commander {
 		productSrvc: &psrvc,
 	}
 }
+
+func (c *Commander) HandleUpdate(upd tgbotapi.Update) {
+	// Ignore any non-Message update
+	if upd.Message == nil {
+		return
+	}
+
+	switch upd.Message.Command() {
+	case "help":
+		c.HelpCommand(upd.Message)
+	case "list":
+		c.ListCommand(upd.Message)
+	case "get":
+		c.GetCommand(upd.Message)
+	default:
+		c.DefaultBehaviour(upd.Message)
+	}
+}
